@@ -132,6 +132,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!$sql) {
             throw new Exception("无法读取application/admin/command/Install/fastadmin.sql文件，请检查是否有读权限");
         }
+        if(file_exists(INSTALL_PATH . 'patch.sql')) $sql .= @file_get_contents(INSTALL_PATH . 'patch.sql');
         $sql = str_replace("`fa_", "`{$mysqlPrefix}", $sql);
         $pdo = new PDO("mysql:host={$mysqlHostname};port={$mysqlHostport}", $mysqlUsername, $mysqlPassword, array(
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

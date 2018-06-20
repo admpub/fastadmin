@@ -1,0 +1,33 @@
+将虚拟主机的root绑定至public目录
+
+例如：
+
+server {
+        listen       80;
+        server_name  www.admpub.com *.admpub.com;
+        root   "C:/phpstudy/WWW/fastcmf/public";
+        location / {
+            index  index.html index.htm index.php;
+                #主要是这一段一定要确保存在
+                if (!-e $request_filename) {
+                    rewrite  ^(.*)$  /index.php/$1  last;
+                    break;
+                }
+                #结束
+            #autoindex  on;
+        }
+        location ~ \.php(.*)$ {
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_split_path_info  ^((?U).+\.php)(/?.+)$;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            fastcgi_param  PATH_INFO  $fastcgi_path_info;
+            fastcgi_param  PATH_TRANSLATED  $document_root$fastcgi_path_info;
+            include        fastcgi_params;
+        }
+}
+
+请将C:/phpstudy/WWW改成你服务器对应所在的目录
+
+如果你使用的是 lnmp.org 的一键安装LNMP环境，
+请查阅 https://lnmp.org/faq/lnmp-vhost-add-howto.html#rewrite 的伪静态配置

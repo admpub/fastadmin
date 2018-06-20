@@ -371,6 +371,7 @@ class Auth extends \fast\Auth
         $pinyin = new \Overtrue\Pinyin\Pinyin('Overtrue\Pinyin\MemoryFileDictLoader');
         // 必须将结果集转换为数组
         $ruleList = collection(\app\admin\model\AuthRule::where('status', 'normal')->where('ismenu', 1)->order('weigh', 'desc')->cache("__menu__")->select())->toArray();
+        $updated = false;
         foreach ($ruleList as $k => &$v) {
             if (!in_array($v['name'], $userRule)) {
                 unset($ruleList[$k]);
@@ -380,10 +381,20 @@ class Auth extends \fast\Auth
             $v['icon'] = $v['icon'] . ' fa-fw';
             $v['url'] = '/' . $module . '/' . $v['name'];
             $v['badge'] = isset($badgeList[$v['name']]) ? $badgeList[$v['name']] : '';
-            $v['py'] = $pinyin->abbr($v['title'], '');
-            $v['pinyin'] = $pinyin->permalink($v['title'], '');
+            //$v['py'] = $pinyin->abbr($v['title'], '');
+            //$v['pinyin'] = $pinyin->permalink($v['title'], '');
+            if($v['title']){
+                $update=[];
+                if(empty($v['py'])) $update['py'] = $v['py'] = $pinyin->abbr($v['title'], '');
+                if(empty($v['pinyin'])) $update['pinyin'] = $v['pinyin'] = $pinyin->permalink($v['title'], '');
+                if($update){
+                    \app\admin\model\AuthRule::where('id',$v['id'])->update($update);
+                    $updated = true;
+                }
+            }
             $v['title'] = __($v['title']);
         }
+        if($updated) \think\Cache::rm('__menu__');
 
         $menu = $nav = '';
         if (Config::get('fastadmin.multiplenav')) {

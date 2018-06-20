@@ -1,0 +1,22 @@
+确保已经启用Apache的伪静态，确保目录已经配置好权限，如下面的Directory配置：
+<VirtualHost *:80>
+    DocumentRoot "/Project/fastcmf/public"
+    ServerName admpub.com 
+    ServerAlias admpub.com *.admpub.com
+    <Directory "/Project/fastcmf">
+        AllowOverride All
+        Options Indexes FollowSymLinks
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+其次伪静态规则在Apache fastcgi模式下会导致No input file specified.
+请修改public目录下的.htaccess文件
+
+默认的
+
+RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+
+修改成
+
+RewriteRule ^(.*)$ index.php [L,E=PATH_INFO:$1]

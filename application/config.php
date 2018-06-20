@@ -20,7 +20,7 @@ return [
     // 应用调试模式
     'app_debug'              => Env::get('app.debug', false),
     // 应用Trace
-    'app_trace'              => Env::get('app.trace', false),
+    'app_trace'              => Env::get('app.trace', true),
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -163,6 +163,8 @@ return [
         'path'  => LOG_PATH,
         // 日志记录级别
         'level' => [],
+        // 日志开关  1:开启 0:关闭
+        'switch' => 1,
     ],
     // +----------------------------------------------------------------------
     // | Trace设置 开启 app_trace 后 有效
