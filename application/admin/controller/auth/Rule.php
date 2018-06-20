@@ -74,6 +74,9 @@ class Rule extends Backend
                 {
                     $this->error(__('The non-menu rule must have parent'));
                 }
+                $pinyin = new \Overtrue\Pinyin\Pinyin('Overtrue\Pinyin\MemoryFileDictLoader');
+                $params['py'] = $pinyin->abbr($params['title'], '');
+                $params['pinyin'] = $pinyin->permalink($params['title'], '');
                 $result = $this->model->validate()->save($params);
                 if ($result === FALSE)
                 {
@@ -109,6 +112,9 @@ class Rule extends Backend
                 $ruleValidate->rule([
                     'name' => 'require|format|unique:AuthRule,name,' . $row->id,
                 ]);
+                $pinyin = new \Overtrue\Pinyin\Pinyin('Overtrue\Pinyin\MemoryFileDictLoader');
+                $params['py'] = $pinyin->abbr($params['title'], '');
+                $params['pinyin'] = $pinyin->permalink($params['title'], '');
                 $result = $row->validate()->save($params);
                 if ($result === FALSE)
                 {

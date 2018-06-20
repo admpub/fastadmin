@@ -49,6 +49,9 @@ class Install extends Command
         }
 
         $sql = file_get_contents(__DIR__ . '/Install/fastadmin.sql');
+        if(file_exists(__DIR__ . '/Install/patch.sql')){
+            $sql .= file_get_contents(__DIR__ . '/Install/patch.sql');
+        }
 
         $sql = str_replace("`fa_", "`{$prefix}", $sql);
 
