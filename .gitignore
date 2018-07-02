@@ -10,3 +10,7 @@ composer.lock
 *.css.map
 !.gitkeep
 .env
+/ErrorFiles
+/.uini
+/u.php
+/up-rewrite.conf
