@@ -58,6 +58,8 @@ $errInfo = '';
 
 //数据库配置文件
 $dbConfigFile = APP_PATH . 'database.php';
+$dbConfigSample = APP_PATH . 'database_sample.php';
+if(!file_exists($dbConfigFile)) file_put_contents($dbConfigFile,file_get_contents($dbConfigSample));
 
 // 锁定的文件
 $lockFile = INSTALL_PATH . 'install.lock';
@@ -71,8 +73,20 @@ if (is_file($lockFile)) {
     $open_basedir = ini_get('open_basedir');
     if ($open_basedir) {
         $dirArr = explode(PATH_SEPARATOR, $open_basedir);
-        if ($dirArr && in_array(__DIR__, $dirArr)) {
+        if ($dirArr && in_array(__DIR__, array_map('realpath',$dirArr))) {
             $errInfo = '当前服务器因配置了open_basedir，导致无法读取父目录<br><a href="https://forum.fastadmin.net/thread/1145?ref=install" target="_blank">点击查看解决办法</a>';
+            $errInfo .= '<pre>
+            请使用phpinfo检查open_basedir的值，一般情况下为no value，如果有值请检查是否包含了FastAdmin项目所在的目录。可以在php.ini中找到open_basedir，将FastAdmin项目目录加入到其中，注意不是public目录。
+
+            如果你使用的是Nginx，可以尝试在对应站点配置文件中添加fastcgi_param
+            
+                location ~ \.php {                                                                        
+                    ......                                        
+                    fastcgi_param  PHP_VALUE  "open_basedir=/var/www/yoursitepath/:/tmp/:/proc/";
+                    ......
+                }
+                
+            </pre>';
         }
     }
     if (!$errInfo) {
