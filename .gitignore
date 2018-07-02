@@ -13,3 +13,4 @@ composer.lock
 /.uini
 /u.php
 /up-rewrite.conf
+/application/database.php
