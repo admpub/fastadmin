@@ -166,7 +166,8 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $pdo->exec($sql);
 
-        $config = @file_get_contents($dbConfigFile);
+        //$config = @file_get_contents($dbConfigFile);
+        $config = @file_get_contents($dbConfigSample);
         $callback = function ($matches) use ($mysqlHostname, $mysqlHostport, $mysqlUsername, $mysqlPassword, $mysqlDatabase, $mysqlPrefix) {
             $field = ucfirst($matches[1]);
             $replace = ${"mysql{$field}"};
